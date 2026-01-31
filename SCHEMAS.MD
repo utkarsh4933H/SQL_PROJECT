@@ -1,6 +1,6 @@
 ```SQL
 ### CUSTOMER AND ORDERS
-
+### Find total number of orders per customer state.
 create table Public.customer(
  customer_id text,
  customer_unique_id text,
