@@ -1,14 +1,28 @@
 ```SQL
 ### CUSTOMER AND ORDERS
 ### Find total number of orders per customer state.
-create table Public.customer(
- customer_id text,
- customer_unique_id text,
- customer_zip_code text,
- CUSTOMER_CITY text,
- customer_state text
+create table customer(
+ customer_id varchar(100) primary key,
+ customer_unique_id varchar(100),
+ customer_zip_code_prefix int,
+ CUSTOMER_CITY varchar(50),
+ customer_state varchar(10)
 );
+ select * from customer;
 
-select count(customer_state),customer_state from public.customer
-group by customer_state;
+create table orders(
+order_id varchar (100) primary key,
+customer_id varchar (100),
+order_status char (50),
+order_purchase_timestamp timestamp,
+order_approved_at timestamp,
+order_delivered_carrier_date timestamp,
+order_delivered_customer_date timestamp,
+order_estimated_delivery_date timestamp
+);
+select * from orders;
+
+select customer_state,count(order_id) from customer c
+join orders o on o.customer_id = c.customer_id
+group by customer_state
 ```
