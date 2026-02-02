@@ -81,7 +81,7 @@ join review r on o.order_id= r.order_id
 where r.review_id is null;
 ```
 ```SQL
-### MONTHLY order count( year_wise)
+### 6. MONTHLY order count( year_wise)
 
 
 select extract (year from order_purchase_timestamp) as year,
@@ -106,7 +106,7 @@ from orders
 where  order_delivered_customer_date > order_estimated_delivery_date
 ```
 ```SQL
-###percentage of cancel orders 
+### 9. percentage of cancel orders 
 
 select count(case when order_status = 'canceled' then 1 end) * 100.0
 /count(order_status) as canceled_percentage
@@ -127,12 +127,13 @@ select sum(payment_value) as total_revenue,payment_type from payment
 group by payment_type
 order by total_revenue;
 ```
-`` Sql
+``` Sql
 ### 12. Average payment value per order
 
 select avg(payment_value) as average_payment,order_id from payment
 group by order_id;
 ```
+
 ```SQL
 ### 13, orders paid in multiple order
 
