@@ -203,10 +203,108 @@ join payment p on o.order_id = p.order_id
 group by o.customer_id
 having avg(p.payment_value) > (select avg(payment_value) from payment);
 ``` 
+```SQL
+### 21. FIND TOTAL REVENUE PER SELLER
+select oi.seller_id,sum(price) from order_item oi
+group by oi.seller_id
+```
+```SQL
+### 22. SELLER WHO DELIVERED ORDERS MORE THEN 5 STATES
 
-
-
-
+select oi.seller_id,count (distinct c.customer_state) from customer c
+join orders o  on c.customer_id=o.customer_id
+join review r on r.order_id=o.order_id
+JOIN payment p on p.order_id = r.order_id
+join order_item oi on r.order_id = oi.order_id
+join product po on oi.product_id = po.product_id
+group by oi.seller_id 
+having count (distinct c.customer_state )> 5;
+```
+```SQL
+### 23. top 5 seller by numbers of orders 
+select oi.seller_id,count(oi.order_id) as total_orders from customer c
+join orders o  on c.customer_id=o.customer_id
+join review r on r.order_id=o.order_id
+JOIN payment p on p.order_id = r.order_id
+join order_item oi on r.order_id = oi.order_id
+join product po on oi.product_id = po.product_id
+group by oi.seller_id
+order by total_orders desc
+limit 5
+```
+```SQL
+### 24. average shipping cost per seller 
+select oi.seller_id,avg(oi.freight_value) as total_orders from customer c
+join orders o  on c.customer_id=o.customer_id
+join review r on r.order_id=o.order_id
+JOIN payment p on p.order_id = r.order_id
+join order_item oi on r.order_id = oi.order_id
+join product po on oi.product_id = po.product_id
+group by oi.seller_id 
+```
+```SQL
+### 25. SELLER WITH AVERAGE REVIEW SCORE < 3 
+select oi.seller_id,avg(r.review_score) as total_orders from customer c
+join orders o  on c.customer_id=o.customer_id
+join review r on r.order_id=o.order_id
+JOIN payment p on p.order_id = r.order_id
+join order_item oi on r.order_id = oi.order_id
+join product po on oi.product_id = po.product_id
+group by oi.seller_id 
+having avg(r.review_score)> 3;
+```
+```SQL 
+### 26. AVERAGE REVIEW SCORE PER PRODUCT 
+select po.product_category_name,avg(r.review_score) as total_orders from customer c
+join orders o  on c.customer_id=o.customer_id
+join review r on r.order_id=o.order_id
+JOIN payment p on p.order_id = r.order_id
+join order_item oi on r.order_id = oi.order_id
+join product po on oi.product_id = po.product_id
+group by po.product_category_name
+```
+```SQL 
+### 27. PRODUCT WITH HIGHEST NUMBER OF 1 - STAR REVIEW 
+select OI.PRODUCT_ID,R.REVIEW_SCORE from customer c
+join orders o  on c.customer_id=o.customer_id
+join review r on r.order_id=o.order_id
+JOIN payment p on p.order_id = r.order_id
+join order_item oi on r.order_id = oi.order_id
+join product po on oi.product_id = po.product_id
+WHERE R.REVIEW_SCORE = 1
+group by OI.PRODUCT_ID,R.REVIEW_SCORE
+```
+```SQL 
+### 28. CUSTOMERS WHO GAVE ONLY 5 STARS RATING 
+select C.CUSTOMER_ID,R.REVIEW_SCORE from customer c
+join orders o  on c.customer_id=o.customer_id
+join review r on r.order_id=o.order_id
+JOIN payment p on p.order_id = r.order_id
+join order_item oi on r.order_id = oi.order_id
+join product po on oi.product_id = po.product_id
+WHERE R.REVIEW_SCORE = 5
+group by C.CUSTOMER_ID,R.REVIEW_SCORE
+```
+```SQL 
+### 29. PERCENTAGE OF POSITIVE REVIEWS(4 AND 5)
+select (SUM(CASE WHEN REVIEW_SCORE IN (4,5) THEN 1 ELSE 0 END ) * 100.0 / COUNT(*)) AS POSITIVE_REVIEW_PERCENTAGE  from customer c
+join orders o  on c.customer_id=o.customer_id
+join review r on r.order_id=o.order_id
+JOIN payment p on p.order_id = r.order_id
+join order_item oi on r.order_id = oi.order_id
+join product po on oi.product_id = po.product_id
+```
+```SQL
+### 30. STATE WITH LOWEST AVERAGE REVIEW SCORE 
+select C.CUSTOMER_STATE,AVG(R.REVIEW_SCORE) AS AVG_SCORE from customer c
+join orders o  on c.customer_id=o.customer_id
+join review r on r.order_id=o.order_id
+JOIN payment p on p.order_id = r.order_id
+join order_item oi on r.order_id = oi.order_id
+join product po on oi.product_id = po.product_id
+GROUP BY C.CUSTOMER_STATE 
+ORDER BY AVG_SCORE 
+```
 
 
 
