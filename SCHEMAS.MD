@@ -160,15 +160,49 @@ group by month
 order by month desc;
 ```
 ```SQL
-### top 10 best selling product categories
+### 16. top 10 best selling product categories
 
 select product_category_name , count(order_id) as max_order from order_item oi
 join product po on oi.product_id = po.product_id
 group by po.product_category_name 
 order by  max_order desc
-limit 10```
+limit 10
+```
+```SQL
+### 17. average product price per category
 
+select product_category_name,avg(price) from order_item oi
+join product po on oi.product_id = po.product_id
+group by product_category_name
+```
+```SQL
+### 18. product sold but never reviewed 
 
+select oi.product_id from order_item oi
+join review r on r.order_id = oi.order_id
+where r.review_id is null
+```
+
+```SQL
+### 19. category with highest delivery delay 
+select avg(o.order_delivered_customer_date - o.order_estimated_delivery_date) as delay_delivery ,po.product_category_name from customer c
+join orders o  on c.customer_id=o.customer_id
+join review r on r.order_id=o.order_id
+JOIN payment p on p.order_id = r.order_id
+join order_item oi on r.order_id = oi.order_id
+join product po on oi.product_id = po.product_id
+where order_delivered_customer_date > order_estimated_delivery_date 
+group by product_category_name,o.order_estimated_delivery_date,o.order_delivered_customer_date
+order by delay_delivery
+```
+```SQL 
+###20. most expensive product sold in each category
+
+select distinct o.customer_id from orders o
+join payment p on o.order_id = p.order_id
+group by o.customer_id
+having avg(p.payment_value) > (select avg(payment_value) from payment);
+``` 
 
 
 
