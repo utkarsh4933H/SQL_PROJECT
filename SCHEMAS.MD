@@ -159,7 +159,14 @@ as revenue from orders o join payment p on o.order_id = p.order_id
 group by month 
 order by month desc;
 ```
+```SQL
+### top 10 best selling product categories
 
+select product_category_name , count(order_id) as max_order from order_item oi
+join product po on oi.product_id = po.product_id
+group by po.product_category_name 
+order by  max_order desc
+limit 10```
 
 
 
