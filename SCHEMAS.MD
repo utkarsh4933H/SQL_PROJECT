@@ -305,11 +305,114 @@ join product po on oi.product_id = po.product_id
 GROUP BY C.CUSTOMER_STATE 
 ORDER BY AVG_SCORE 
 ```
-
-
-
-
-
+```SQL
+### 31. CUSTOMERS WHOSE ORDER VALUE > OVERALL AVERAGE ORDER VALUE 
+with order_value as (
+select o.customer_id, sum(oi.price + oi.freight_value) AS order_value from customer c
+join orders o  on c.customer_id=o.customer_id
+join review r on r.order_id=o.order_id
+JOIN payment p on p.order_id = r.order_id
+join order_item oi on r.order_id = oi.order_id
+join product po on oi.product_id = po.product_id
+group by o.customer_id
+)
+select * from order_value
+where order_value > (select avg(order_value) from order_value);
+```
+```SQL
+### 32. SELLER WHOSE REVENUE > AVERAGE SELLER REVENUE
+WITH seller_revenue AS (
+SELECT oi.seller_id,sum(oi.price + oi.freight_value) as seller_revenue from customer c
+join orders o  on c.customer_id=o.customer_id
+join review r on r.order_id=o.order_id
+JOIN payment p on p.order_id = r.order_id
+join order_item oi on r.order_id = oi.order_id
+join product po on oi.product_id = po.product_id
+group by oi.seller_id
+)
+select * from seller_revenue
+where seller_revenue > (select avg(seller_revenue) from seller_revenue);
+```
+```SQL
+### 33. TOP PRODUCT PER CATEGORY BASED ON SALES VALUE 
+WITH category_sale as (
+select po.product_category_name,oi.product_id,sum(oi.price) as total_value from customer c
+join orders o  on c.customer_id=o.customer_id
+join review r on r.order_id=o.order_id
+JOIN payment p on p.order_id = r.order_id
+join order_item oi on r.order_id = oi.order_id
+join product po on oi.product_id = po.product_id
+group by po.product_category_name,oi.product_id
+),
+ranked as (
+select * , rank() over (partition by product_category_name
+order by total_value desc )as rnk from category_sale
+)
+select * from ranked
+where rnk = 1;
+```
+```SQL
+### 34. CUSTOMERS WHO ORDERED FROM MORE THAN 3 SELLERS
+select c.customer_id,count(distinct oi.seller_id) from customer c
+join orders o  on c.customer_id=o.customer_id
+join review r on r.order_id=o.order_id
+JOIN payment p on p.order_id = r.order_id
+join order_item oi on r.order_id = oi.order_id
+join product po on oi.product_id = po.product_id
+group by c.customer_id
+having count(distinct oi.seller_id) > 3;
+```
+```SQL
+### 35. state where average delivery time > national average
+with delivery_time  as(
+select c.customer_state,(o.order_delivered_customer_date - o.order_purchase_timestamp) 
+as days from customer c
+join orders o  on c.customer_id=o.customer_id
+join review r on r.order_id=o.order_id
+JOIN payment p on p.order_id = r.order_id
+join order_item oi on r.order_id = oi.order_id
+join product po on oi.product_id = po.product_id
+where o.order_delivered_customer_date is not null
+)
+select customer_state from delivery_time
+group by customer_state
+having avg(days) > (select avg(days) from delivery_time);
+```
+```SQL
+### 36. RANK PRODUCT CATEGORIES BY TOTAL REVENUE 
+SELECT po.product_category_name,sum(oi.price),rank() over (partition by product_category_name
+order by sum(oi.price)  desc )as rnk from  customer c
+join orders o  on c.customer_id=o.customer_id
+join review r on r.order_id=o.order_id
+JOIN payment p on p.order_id = r.order_id
+join order_item oi on r.order_id = oi.order_id
+join product po on oi.product_id = po.product_id
+group by po.product_category_name
+```
+``` SQL 
+### 37. FIRST AND LAST ORDER DATE FOR EACH CUSTOMER
+SELECT C.CUSTOMER_ID,MIN(ORDER_PURCHASE_TIMESTAMP),MAX(ORDER_PURCHASE_TIMESTAMP) from customer c
+join orders o  on c.customer_id=o.customer_id
+join review r on r.order_id=o.order_id
+JOIN payment p on p.order_id = r.order_id
+join order_item oi on r.order_id = oi.order_id
+join product po on oi.product_id = po.product_id
+GROUP BY C.CUSTOMER_ID
+```
+```SQL
+### 38. RUNNING TOTAL OF REVENUE BY MONTH 
+with total_revenue as (
+SELECT DATe_TRUNC('month', o.order_purchase_timestamp) as month , sum(oi.price) as revenue 
+from customer c
+join orders o  on c.customer_id=o.customer_id
+join review r on r.order_id=o.order_id
+JOIN payment p on p.order_id = r.order_id
+join order_item oi on r.order_id = oi.order_id
+join product po on oi.product_id = po.product_id
+group by month
+)
+select month,revenue,sum(revenue) over(order by month) as running_total from total_revenue
+```
 
 
 
