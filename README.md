@@ -1,4 +1,4 @@
-# SQL PROJECT (BRAZILIAN E-COMMERCE PROJECT 
+# SQL PROJECT (BRAZILIAN E-COMMERCE PROJECT) )
 
 SQL-based analysis of Brazilian E-commerce dataset to uncover customer behavior, sales trends, delivery performance, and seller insights.
 
