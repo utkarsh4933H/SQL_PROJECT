@@ -1,5 +1,5 @@
 ```SQL
-### CUSTOMER AND ORDERS
+### CUSTOMER AND ORDERS ANALYSIS
 ### 1 Find total number of orders per customer state.
 create table customer(
  customer_id varchar(100) primary key,
@@ -81,6 +81,9 @@ join review r on o.order_id= r.order_id
 where r.review_id is null;
 ```
 ```SQL
+
+
+### ORDER ANALYSIS 
 ### 6. MONTHLY order count( year_wise)
 
 
@@ -91,6 +94,8 @@ group by month, year
 order by month, year;
 ```
 ```SQL
+
+
 ###7. average delivery time (day) per state
 
 select c.customer_state, avg(o.order_delivered_customer_date - o.order_purchase_timestamp) as average_delivery_date from orders o 
@@ -121,6 +126,8 @@ order by  total_order desc
 limit 1 ;
 ```
 ```SQL
+
+### REVENUE & PAYMENT ANALYSIS
 ### 11. Total revenue per payment type
 
 select sum(payment_value) as total_revenue,payment_type from payment
@@ -160,6 +167,8 @@ group by month
 order by month desc;
 ```
 ```SQL
+
+### PRODUCT ANALYSIS
 ### 16. top 10 best selling product categories
 
 select product_category_name , count(order_id) as max_order from order_item oi
@@ -196,6 +205,8 @@ group by product_category_name,o.order_estimated_delivery_date,o.order_delivered
 order by delay_delivery
 ```
 ```SQL 
+
+### CUSTOMER VALUE ANALYSIS
 ###20. most high spending customer sold in each category
 
 select distinct o.customer_id from orders o
@@ -204,6 +215,8 @@ group by o.customer_id
 having avg(p.payment_value) > (select avg(payment_value) from payment);
 ``` 
 ```SQL
+
+### SELLER ANALYSIS
 ### 21. FIND TOTAL REVENUE PER SELLER
 select oi.seller_id,sum(price) from order_item oi
 group by oi.seller_id
@@ -254,6 +267,8 @@ group by oi.seller_id
 having avg(r.review_score) < 3;
 ```
 ```SQL 
+
+### REVIEW ANALYSIS 
 ### 26. AVERAGE REVIEW SCORE PER PRODUCT 
 select po.product_category_name,avg(r.review_score) as total_orders from customer c
 join orders o  on c.customer_id=o.customer_id
