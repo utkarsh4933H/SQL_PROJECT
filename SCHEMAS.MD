@@ -196,7 +196,7 @@ group by product_category_name,o.order_estimated_delivery_date,o.order_delivered
 order by delay_delivery
 ```
 ```SQL 
-###20. most expensive product sold in each category
+###20. most high spending customer sold in each category
 
 select distinct o.customer_id from orders o
 join payment p on o.order_id = p.order_id
