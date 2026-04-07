@@ -251,7 +251,7 @@ JOIN payment p on p.order_id = r.order_id
 join order_item oi on r.order_id = oi.order_id
 join product po on oi.product_id = po.product_id
 group by oi.seller_id 
-having avg(r.review_score)> 3;
+having avg(r.review_score) < 3;
 ```
 ```SQL 
 ### 26. AVERAGE REVIEW SCORE PER PRODUCT 
