@@ -1,6 +1,7 @@
-```SQL
-### CUSTOMER AND ORDERS ANALYSIS
-### 1 Find total number of orders per customer state.
+SQL
+ 
+CUSTOMER AND ORDERS ANALYSIS
+1 Find total number of orders per customer state.
 create table customer(
  customer_id varchar(100) primary key,
  customer_unique_id varchar(100),
@@ -8,6 +9,7 @@ create table customer(
  CUSTOMER_CITY varchar(50),
  customer_state varchar(10)
 );
+
  select * from customer;
 
 create table orders(
